@@ -1,0 +1,27 @@
+#Manage Messages perm required to remove invalid reactions
+
+prefix: "/lotto"
+embed start:
+  title: ""
+  colour: 0x00FF44
+  fields: []
+#  fields: # example
+#  - name: "Prize"
+#    value: "candy"
+#  - name: "Sponsor"
+#    value: "nobody ayy lmao"
+  description: "React to die"
+embed end:
+  title: "Lottery Winners"
+  colour: 0x11FF22
+  fields: []
+  description: |
+    The winners of the lottery were:
+    {0}
+    Thanks for joining!
+
+reactions:
+  whitelist: []
+  #- "384122129391812628" # Human
+  blacklist:
+  - "391401639501889538" # ShinoSilence
