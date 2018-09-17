@@ -80,7 +80,7 @@ class MyClient(discord.Client):
             for field in config["embed end"]["fields"]:
                 em.add_field(name=field["name"], value=field["value"])
 
-            await client.send_message(message.channel, embed=em)
+            await client.send_message(sent.channel, embed=em)
 
     async def on_reaction_add(self, reaction, user):
         if not is_member_valid(user):
