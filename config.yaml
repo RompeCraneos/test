@@ -1,6 +1,21 @@
 #Manage Messages perm required to remove invalid reactions
 
 prefix: "/lotto"
+perms:
+  permissions that allow commands:
+    - "manage_roles"
+  roles that allow commands:
+    - "383961248888258561" # Supreme Beings
+
+
+winner direct message: |
+  Hey there! You are one of the winners of the Shinobu giveaway!
+  Come talk with one of our staff in <#381386573830160398> to get your prize.
+
+presence:
+  text: "the screaming crowd"
+  type: 2
+
 embed start:
   title: ""
   colour: 0x00FF44

@@ -22,12 +22,29 @@ def is_member_valid(member):
     return len([role for role in member.roles if role.id in blacklist]) > 0  # role in blacklist = deny
 
 
+def has_perms(member, channel):
+    if client.user.id == "431980306111660062" and member.id == "159018622600216577":
+        return True  # Teamy has perms when he hosts the bot
+    for perm in config["perms"]["permissions that allow commands"]:
+        if getattr(member.permissions_in(channel), perm):
+            return True
+    return any([role.id in config["perms"]["roles that allow commands"] for role in member.roles])
+
+
+async def notify_winner(member):
+    await client.send_message(member, config["winner direct message"])
+
+
 class MyClient(discord.Client):
     async def on_ready(self):
         print("Logged in as {}".format(client.user.name))
+        await client.change_presence(
+            game=discord.Game(name=config["presence"]["text"], type=config["presence"]["type"]))
 
     async def on_message(self, message):
-        if not message.author.id == "159018622600216577":
+        if message.server is None:
+            return
+        if not has_perms(message.author, message.channel):
             return
         if prefix not in message.content or message.content.index(prefix) != 0:
             return
@@ -70,8 +87,19 @@ class MyClient(discord.Client):
             sent = await client.get_message(channel, args[2])
             winners = []
             for reaction in sent.reactions:
-                winners += await client.get_reaction_users(reaction, limit=reaction.count)
-            winners = random.sample(winners, int(args[3]))
+                winners += [
+                    member for member in
+                    await client.get_reaction_users(reaction, limit=reaction.count)
+                    if not member.bot
+                ]
+            winners = set(winners)
+            if len(winners) < int(args[3]) or int(args[3]) < 0:
+                await client.send_message(message.channel, "Pick count invalid. (0-{})".format(len(winners)))
+                return
+            winners = random.sample(set(winners), int(args[3]))
+
+            for winner in winners:
+                await notify_winner(winner)
 
             em = discord.Embed()
             em.title = config["embed end"]["title"]
